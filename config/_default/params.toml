@@ -1,0 +1,34 @@
+mainSections = ["posts"] # use it for blog page section
+
+uniqueHomePage = true # change to false to add sidebar to homepage
+
+repo = "https://github.com/misakajimmy/wm/"
+
+time_format_blog = "2006, Monday, January 02"
+time_format_default = "2006, January 2"
+enableDarkMode = true # set to false to disable darkmode by default # user will still have the option to use dark mode
+
+# sets the maximum number of lines per codeblock. The codeblock will however be scrollable and expandable.
+codeMaxLines = 7
+
+# disable showing line numbers by default. Switch to `true` if you'd rather have them on.
+codeLineNumbers = true
+
+# Site logo
+[logo]
+  lightMode = "images/logo-dark.svg"
+  darkMode = "images/logo-light.svg"
+
+[source]
+  name = "GitHub"
+  iconLight = "images/GitHubMarkLight.svg"
+  iconDark = "images/GitHubMarkDark.svg"
+  url = "https://github.com/misakajimmy/"
+
+# optional
+# attribution. Feel free to delete this
+[author]
+  name = "MisakaJimmy"
+  url = "https://github.com/misakajimmy/"
+
+staticDir = ["assets"]
