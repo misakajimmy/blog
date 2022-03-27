@@ -1,0 +1,6 @@
+[submodule "compose"]
+	path = compose
+	url = git@github.com:misakajimmy/compose.git
+[submodule "themes/compose"]
+	path = themes/compose
+	url = git@github.com:misakajimmy/compose.git
