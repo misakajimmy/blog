@@ -96,3 +96,31 @@ yarn在某个安装包请求失败时不会导致安装失败，它会自动去�
 6. 扁平模式
 
 对于多个包依赖同一个子包的情况，yarn会尽量提取为同一个包，防止出现多处副本，浪费空间。比如1.2中，yarn会为babel-generator和babel-helper-define-map 创建同一个lodash子依赖，这样就节约一份的空间。
+
+## npm 设置代理
+
+```shell
+npm config set proxy http://127.0.0.1:8080
+npm config set https-proxy http://127.0.0.1:8080
+```
+
+## npm 删除代理
+
+```shell
+npm config delete proxy
+npm config delete https-proxy
+```
+
+## yarn 设置代理
+
+```shell
+yarn config set proxy http://127.0.0.1:8080
+yarn config set https-proxy http://127.0.0.1:8080
+```
+
+## yarn 删除代理
+
+```shell
+yarn config delete proxy
+yarn config delete https-proxy
+```
