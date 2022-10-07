@@ -1,4 +1,4 @@
-baseURL = "https://misakaJimmy.github.io/"
+baseURL = "localhost:1313"
 languageCode = "zh-cn"
 title = "MisakaJimmy Blog"
 theme = "compose"
