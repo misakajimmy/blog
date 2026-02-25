@@ -15,7 +15,7 @@ title = "Projects"
 
 Whether pursuing personal interests and passions or chasing professional ambitions, lifelong learning can help us to achieve personal fulfillment and satisfaction.
 
-{{< button "docs/compose/" "Start Learning" >}}
+{{< button "docs/" "Start Learning" >}}
 {{< /column >}}
 {{< column >}}
 ![home-page](/images/home-page.jpg)
