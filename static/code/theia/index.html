@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Theia index.js</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 1rem;
+        background: #1e1e1e;
+        color: #d4d4d4;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 13px;
+      }
+      pre {
+        margin: 0;
+        white-space: pre;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <pre><code>// @ts-check
+require('reflect-metadata');
+const { Container } = require('@theia/core/shared/inversify');
+const { FrontendApplicationConfigProvider } = require('@theia/core/lib/browser/frontend-application-config-provider');
+
+FrontendApplicationConfigProvider.set({
+    "applicationName": "Theia Browser-Only Example",
+    "defaultTheme": {
+        "light": "light",
+        "dark": "dark"
+    },
+    "defaultIconTheme": "theia-file-icons",
+    "electron": {
+        "windowOptions": {},
+        "showWindowEarly": true,
+        "splashScreenOptions": {},
+        "uriScheme": "theia"
+    },
+    "defaultLocale": "",
+    "validatePreferencesSchema": true,
+    "reloadOnReconnect": false,
+    "uriScheme": "theia",
+    "preferences": {
+        "files.enableTrash": false
+    }
+});
+
+
+self.MonacoEnvironment = {
+    getWorkerUrl: function (moduleId, label) {
+        return './editor.worker.js';
+    }
+}
+
+function load(container, jsModule) {
+    return Promise.resolve(jsModule)
+        .then(containerModule => container.load(containerModule.default));
+}
+
+async function preload(container) {
+    try {
+        await load(container, import('@theia/core/lib/browser/preload/preload-module'));
+        await load(container, import('@theia/core/lib/browser-only/preload/frontend-only-preload-module'));
+        await load(container, import('@theia/api-samples/lib/browser/api-samples-preload-module'));
+        const { Preloader } = require('@theia/core/lib/browser/preload/preloader');
+        const preloader = container.get(Preloader);
+        await preloader.initialize();
+    } catch (reason) {
+        console.error('Failed to run preload scripts.');
+        if (reason) {
+            console.error(reason);
+        }
+    }
+}
+
+module.exports = (async () => {
+    const { messagingFrontendModule } = require('@theia/core/lib/browser/messaging/messaging-frontend-module');
+    const container = new Container();
+    container.load(messagingFrontendModule);
+    const { messagingFrontendOnlyModule } = require('@theia/core/lib/browser-only/messaging/messaging-frontend-only-module');
+    container.load(messagingFrontendOnlyModule);
+
+    await preload(container);
+
+    
+    const { MonacoInit } = require('@theia/monaco/lib/browser/monaco-init');
+    ;
+
+    const { FrontendApplication } = require('@theia/core/lib/browser');
+    const { frontendApplicationModule } = require('@theia/core/lib/browser/frontend-application-module');    
+    const { loggerFrontendModule } = require('@theia/core/lib/browser/logger-frontend-module');
+
+    container.load(frontendApplicationModule);
+    const { frontendOnlyApplicationModule } = require('@theia/core/lib/browser-only/frontend-only-application-module');
+    container.load(frontendOnlyApplicationModule);
+    
+    container.load(loggerFrontendModule);
+    const { loggerFrontendOnlyModule } = require('@theia/core/lib/browser-only/logger-frontend-only-module');
+    container.load(loggerFrontendOnlyModule);
+
+    try {
+        await load(container, import('@theia/core/lib/browser-only/i18n/i18n-frontend-only-module'));
+        await load(container, import('@theia/core/lib/browser/menu/browser-menu-module'));
+        await load(container, import('@theia/core/lib/browser/window/browser-window-module'));
+        await load(container, import('@theia/core/lib/browser/keyboard/browser-keyboard-module'));
+        await load(container, import('@theia/core/lib/browser/request/browser-request-module'));
+        await load(container, import('@theia/variable-resolver/lib/browser/variable-resolver-frontend-module'));
+        await load(container, import('@theia/editor/lib/browser/editor-frontend-module'));
+        await load(container, import('@theia/filesystem/lib/browser/filesystem-frontend-module'));
+        await load(container, import('@theia/filesystem/lib/browser-only/browser-only-filesystem-frontend-module'));
+        await load(container, import('@theia/filesystem/lib/browser-only/download/file-download-frontend-module'));
+        await load(container, import('@theia/filesystem/lib/browser/file-dialog/file-dialog-module'));
+        await load(container, import('@theia/workspace/lib/browser/workspace-frontend-module'));
+        await load(container, import('@theia/workspace/lib/browser-only/workspace-frontend-only-module'));
+        await load(container, import('@theia/markers/lib/browser/problem/problem-frontend-module'));
+        await load(container, import('@theia/outline-view/lib/browser/outline-view-frontend-module'));
+        await load(container, import('@theia/monaco/lib/browser/monaco-frontend-module'));
+        await load(container, import('@theia/output/lib/browser/output-frontend-module'));
+        await load(container, import('@theia/ai-core/lib/browser/ai-core-frontend-module'));
+        await load(container, import('@theia/process/lib/common/process-common-module'));
+        await load(container, import('@theia/file-search/lib/browser-only/file-search-frontend-only-module'));
+        await load(container, import('@theia/ai-chat/lib/browser/ai-chat-frontend-module'));
+        await load(container, import('@theia/navigator/lib/browser/navigator-frontend-module'));
+        await load(container, import('@theia/editor-preview/lib/browser/editor-preview-frontend-module'));
+        await load(container, import('@theia/userstorage/lib/browser/user-storage-frontend-module'));
+        await load(container, import('@theia/preferences/lib/browser/preference-frontend-module'));
+        await load(container, import('@theia/ai-chat-ui/lib/browser/ai-chat-ui-frontend-module'));
+        await load(container, import('@theia/ai-code-completion/lib/browser/ai-code-completion-frontend-module'));
+        await load(container, import('@theia/ai-core-ui/lib/browser/ai-core-ui-frontend-module'));
+        await load(container, import('@theia/ai-history/lib/browser/ai-history-frontend-module'));
+        await load(container, import('@theia/ai-ollama/lib/browser/ollama-frontend-module'));
+        await load(container, import('@theia/ai-openai/lib/browser/openai-frontend-module'));
+        await load(container, import('@theia/scanoss/lib/browser/scanoss-frontend-module'));
+        await load(container, import('@theia/ai-scanoss/lib/browser/ai-scanoss-frontend-module'));
+        await load(container, import('@theia/ai-mcp/lib/browser/mcp-frontend-module'));
+        await load(container, import('@theia/ai-mcp-server/lib/browser/mcp-frontend-module'));
+        await load(container, import('@theia/search-in-workspace/lib/browser/search-in-workspace-frontend-module'));
+        await load(container, import('@theia/search-in-workspace/lib/browser-only/search-in-workspace-frontend-only-module'));
+        await load(container, import('@theia/terminal/lib/browser/terminal-frontend-module'));
+        await load(container, import('@theia/test/lib/browser/view/test-view-frontend-module'));
+        await load(container, import('@theia/toolbar/lib/browser/toolbar-frontend-module'));
+        await load(container, import('@theia/bulk-edit/lib/browser/bulk-edit-frontend-module'));
+        await load(container, import('@theia/callhierarchy/lib/browser/callhierarchy-frontend-module'));
+        await load(container, import('@theia/console/lib/browser/console-frontend-module'));
+        await load(container, import('@theia/task/lib/browser/task-frontend-module'));
+        await load(container, import('@theia/debug/lib/browser/debug-frontend-module'));
+        await load(container, import('@theia/messages/lib/browser/messages-frontend-module'));
+        await load(container, import('@theia/notebook/lib/browser/notebook-frontend-module'));
+        await load(container, import('@theia/scm/lib/browser/scm-frontend-module'));
+        await load(container, import('@theia/timeline/lib/browser/timeline-frontend-module'));
+        await load(container, import('@theia/typehierarchy/lib/browser/typehierarchy-frontend-module'));
+        await load(container, import('@theia/plugin-ext/lib/plugin-ext-frontend-module'));
+        await load(container, import('@theia/plugin-ext-vscode/lib/browser/plugin-vscode-frontend-module'));
+        await load(container, import('@theia/vsx-registry/lib/common/vsx-registry-common-module'));
+        await load(container, import('@theia/vsx-registry/lib/browser/vsx-registry-frontend-module'));
+        await load(container, import('@theia/api-samples/lib/browser/api-samples-frontend-module'));
+        await load(container, import('@theia/api-samples/lib/browser-only/api-samples-frontend-only-module'));
+        await load(container, import('@theia/collaboration/lib/browser/collaboration-frontend-module'));
+        await load(container, import('@theia/keymaps/lib/browser/keymaps-frontend-module'));
+        await load(container, import('@theia/mini-browser/lib/browser/mini-browser-frontend-module'));
+        await load(container, import('@theia/mini-browser/lib/browser/environment/mini-browser-environment-module'));
+        await load(container, import('@theia/preview/lib/browser/preview-frontend-module'));
+        await load(container, import('@theia/getting-started/lib/browser/getting-started-frontend-module'));
+        await load(container, import('@theia/scm-extra/lib/browser/scm-extra-frontend-module'));
+        await load(container, import('@theia/git/lib/browser/git-frontend-module'));
+        await load(container, import('@theia/git/lib/browser/prompt/git-prompt-module'));
+        await load(container, import('@theia/memory-inspector/lib/browser/memory-inspector-frontend-module'));
+        await load(container, import('@theia/metrics/lib/browser/metrics-frontend-module'));
+        await load(container, import('@theia/plugin-dev/lib/browser/plugin-dev-frontend-module'));
+        await load(container, import('@theia/plugin-metrics/lib/browser/plugin-metrics-frontend-module'));
+        await load(container, import('@theia/property-view/lib/browser/property-view-frontend-module'));
+        await load(container, import('@theia/secondary-window/lib/browser/secondary-window-frontend-module'));
+        
+        MonacoInit.init(container);
+        ;
+        await start();
+    } catch (reason) {
+        console.error('Failed to start the frontend application.');
+        if (reason) {
+            console.error(reason);
+        }
+    }
+
+    function start() {
+        (window['theia'] = window['theia'] || {}).container = container;
+        return container.get(FrontendApplication).start();
+    }
+})();
+</code></pre>
+  </body>
+</html>
+
